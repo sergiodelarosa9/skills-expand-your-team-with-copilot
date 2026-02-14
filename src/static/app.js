@@ -472,6 +472,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Helper function to escape HTML for safe attribute use
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   // Function to render a single activity card
   function renderActivityCard(name, details) {
     const activityCard = document.createElement("div");
@@ -519,9 +526,9 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    // Create share button HTML
+    // Create share button HTML with proper escaping
     const shareButtonHtml = `
-      <button class="share-button tooltip" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}" aria-label="Share activity">
+      <button class="share-button tooltip" data-activity="${escapeHtml(name)}" data-description="${escapeHtml(details.description)}" data-schedule="${escapeHtml(formattedSchedule)}" aria-label="Share activity">
         <span class="share-icon">📤</span>
         <span class="tooltip-text">Share this activity</span>
       </button>
@@ -882,8 +889,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to open share modal
   function openShareModal(activityName, description, schedule) {
-    // Create share URL (current page URL)
-    const shareUrl = window.location.href;
+    // Create share URL (base URL without query params or hash)
+    const baseUrl = `${window.location.protocol}//${window.location.host}${window.location.pathname}`;
+    const shareUrl = baseUrl;
     const shareText = `Check out ${activityName} at Mergington High School! ${description} Schedule: ${schedule}`;
 
     // Create or get the share modal
@@ -993,10 +1001,32 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = shareLink;
         break;
       case "copy":
-        // Copy link to clipboard
-        navigator.clipboard
-          .writeText(shareUrl)
-          .then(() => {
+        // Copy link to clipboard with fallback for older browsers
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(shareUrl)
+            .then(() => {
+              showMessage("Link copied to clipboard!", "success");
+              // Close share modal
+              const shareModal = document.getElementById("share-modal");
+              shareModal.classList.remove("show");
+              setTimeout(() => {
+                shareModal.classList.add("hidden");
+              }, 300);
+            })
+            .catch(() => {
+              showMessage("Failed to copy link", "error");
+            });
+        } else {
+          // Fallback for browsers that don't support clipboard API
+          const textArea = document.createElement("textarea");
+          textArea.value = shareUrl;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-999999px";
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand("copy");
             showMessage("Link copied to clipboard!", "success");
             // Close share modal
             const shareModal = document.getElementById("share-modal");
@@ -1004,10 +1034,11 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
               shareModal.classList.add("hidden");
             }, 300);
-          })
-          .catch(() => {
+          } catch (err) {
             showMessage("Failed to copy link", "error");
-          });
+          }
+          document.body.removeChild(textArea);
+        }
         break;
     }
   }
