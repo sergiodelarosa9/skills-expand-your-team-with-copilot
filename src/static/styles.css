@@ -205,6 +205,116 @@ section h3 {
   letter-spacing: 0.3px;
 }
 
+/* Share Button */
+.share-button {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(145deg, #4caf50, #388e3c);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+  z-index: 10;
+}
+
+.share-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.4);
+  background: linear-gradient(145deg, #66bb6a, #4caf50);
+}
+
+.share-icon {
+  font-size: 0.9rem;
+}
+
+/* Share Modal Styles */
+.share-modal-content {
+  max-width: 400px;
+}
+
+.share-modal-activity-name {
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.share-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.share-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background-color: white;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.share-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.share-platform-icon {
+  font-size: 1.2rem;
+}
+
+.facebook-share:hover {
+  background-color: #1877f2;
+  color: white;
+  border-color: #1877f2;
+}
+
+.twitter-share:hover {
+  background-color: #1da1f2;
+  color: white;
+  border-color: #1da1f2;
+}
+
+.linkedin-share:hover {
+  background-color: #0077b5;
+  color: white;
+  border-color: #0077b5;
+}
+
+.email-share:hover {
+  background-color: #ea4335;
+  color: white;
+  border-color: #ea4335;
+}
+
+.copy-link:hover {
+  background-color: #34a853;
+  color: white;
+  border-color: #34a853;
+}
+
+/* Make copy link span full width */
+.share-buttons .copy-link {
+  grid-column: 1 / -1;
+}
+
 /* Capacity Indicator */
 .capacity-container {
   margin: 8px 0;
